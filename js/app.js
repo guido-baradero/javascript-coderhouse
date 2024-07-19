@@ -1,114 +1,310 @@
+const agenda = {};
+let contador = 1;
+let usuarioActual = '';
+
+const diasSemana = { 1: 'lunes', 2: 'martes', 3: 'miercoles', 4: 'jueves', 5: 'viernes', 6: 'sabado', 7: 'domingo' };
+
+function iniciarSesion() {
+    let nombreUsuario;
+    do {
+        nombreUsuario = prompt('Ingrese su nombre').trim();
+        if (!nombreUsuario) {
+            alert('El nombre de usuario no puede estar vacio');
+        }
+    } while (!nombreUsuario);
+
+    usuarioActual = nombreUsuario;
+    if (!agenda[usuarioActual]) {
+        agenda[usuarioActual] = [];
+        console.log(`Agenda de ${usuarioActual}`);
+        alert(`Bienvenido ${usuarioActual}`);
+    } else {
+        alert(`Hola ${usuarioActual} vas a revisar tus notas...`);
+    }
+}
+
+function generarId(tipoTareaNum) {
+    return `${tipoTareaNum}-${contador}`;
+}
+
+function validarEntrada(valor, min, max) {
+    const numero = parseInt(valor);
+    return !isNaN(numero) && numero >= min && numero <= max;
+}
+
+function agregarTarea() {
+    const tipoTareaNum = prompt(`Agenda de ${usuarioActual}\n\nElija la opcion\n\n1 - En la semana\n2 - En el calendario\n3 - En el día...`);
+    if (!validarEntrada(tipoTareaNum, 1, 3)) {
+        alert('Ingreso invalido');
+        return;
+    }
+
+    let tarea = { id: '', tipo: '', dia: '', titulo: '', estado: 'Pendiente' };
+
+    if (tipoTareaNum === '1') {
+        tarea.tipo = 'Semanal';
+        const diasNumeros = prompt('Marque los días separados por comas (1,3,5)\n1 - Lunes\n2 - Martes\n3 - Miércoles\n4 - Jueves\n5 - Viernes\n6 - Sábado\n7 - Domingo');
+        const diasNombres = diasNumeros.split(',').map(num => {
+            const dia = parseInt(num.trim());
+            if (!validarEntrada(dia, 1, 7)) {
+                alert('Ingreso invalido');
+                return null;
+            }
+            return diasSemana[dia];
+        }).filter(dia => dia !== null);
+        if (diasNombres.length === 0) {
+            alert('Ingreso invalido');
+            return;
+        }
+        tarea.dia = diasNombres.join(', ');
+    } else if (tipoTareaNum === '2') {
+        tarea.tipo = 'Mensual';
+        const diaMes = prompt('ESCRIBIR\nIngrese el número de día del mes (del 1 al 31)');
+        if (!validarEntrada(diaMes, 1, 31)) {
+            alert('Ingreso invalido');
+            return;
+        }
+        tarea.dia = diaMes;
+    } else if (tipoTareaNum === '3') {
+        tarea.tipo = 'hoy';
+        tarea.dia = 'hoy';
+    }
+
+    tarea.id = generarId(tipoTareaNum);
+    contador++;
+    tarea.titulo = prompt('AGREGAR\n\nIngrese el título de su tarea');
+    if (!tarea.titulo.trim()) {
+        alert('El título no puede estar vacío');
+        return;
+    }
+    agenda[usuarioActual].push(tarea);
+    console.log(`Se agrego ${tarea.titulo} para ${tarea.dia} en la agenda de ${usuarioActual}`);
+}
+
+function mostrarTareas(tipo) {
+    const tareasFiltradas = agenda[usuarioActual].filter(tarea => tarea.tipo === tipo);
+    if (tareasFiltradas.length === 0) {
+        console.log(`No hay tarea ${tipo}`);
+        alert(`No hay tarea ${tipo}`);
+    } else {
+        console.log(`Agenda de ${usuarioActual}\nTareas ${tipo}`);
+        console.table(tareasFiltradas);
+    }
+}
+
+function mostrarTodasTareas() {
+    if (agenda[usuarioActual].length === 0) {
+        console.log(`${usuarioActual} no agregaste ninguna tarea`);
+        alert('No hay tareas');
+    } else {
+        console.log(`Agenda de ${usuarioActual} completa`);
+        console.table(agenda[usuarioActual]);
+    }
+}
+
+function verAgenda() {
+    const vistaNum = prompt(`Agenda de ${usuarioActual}\n\nVER\n\n1 - Día (hoy)\n2 - Semana\n3 - Mes\n4 - Todo`);
+    if (!validarEntrada(vistaNum, 1, 4)) {
+        alert('Marque un N° del 1 al 4');
+        return;
+    }
+
+    if (vistaNum === '1') {
+        mostrarTareas('hoy');
+    } else if (vistaNum === '2') {
+        mostrarTareas('Semanal');
+    } else if (vistaNum === '3') {
+        mostrarTareas('Mensual');
+    } else if (vistaNum === '4') {
+        mostrarTodasTareas();
+    }
+}
+
+function modificarTarea() {
+    const tipoTareaNum = prompt(`Agenda de ${usuarioActual}\n\nSu tarea a modificar es:\n\n1 - Semanal\n2 - Mensual\n3 - De hoy`);
+    if (!validarEntrada(tipoTareaNum, 1, 3)) {
+        alert('Ingreso invalido');
+        return;
+    }
+    const tipo = tipoTareaNum === '1' ? 'Semanal' : tipoTareaNum === '2' ? 'Mensual' : 'hoy';
+    const tareasFiltradas = agenda[usuarioActual].filter(tarea => tarea.tipo === tipo);
+    if (tareasFiltradas.length === 0) {
+        alert(`No hay ninguna tarea ${tipo}`);
+        return;
+    }
+
+    console.table(tareasFiltradas);
+    const id = prompt('MODIFICAR\n\nIngrese el ID');
+    const tarea = agenda[usuarioActual].find(t => t.id === id);
+
+    if (!tarea) {
+        alert('ID Invalido');
+        return;
+    }
+
+    const campo = prompt('MODIFICAR\n\n1 - Título\n2 - Días (para tareas semanales o mensuales)\n3 - Estado');
+    if (!validarEntrada(campo, 1, 3)) {
+        alert('Ingreso invalido');
+        return;
+    }
+
+    switch (campo) {
+        case '1':
+            tarea.titulo = prompt('MODIFICAR\n\nIngrese el nuevo título');
+            if (!tarea.titulo.trim()) {
+                alert('El titulo no puede estar vacio');
+            } else {
+                alert('Se ha modificado el titulo de su tarea');
+            }
+            break;
+        case '2':
+            if (tipo === 'Semanal') {
+                const diasNumeros = prompt('MODIFICAR\n\nNuevos dias para su tarea:\n1 - Lunes\n2 - Martes\n3 - Miércoles\n4 - Jueves\n5 - Viernes\n6 - Sábado\n7 - Domingo');
+                const diasNombres = diasNumeros.split(',').map(num => {
+                    const dia = parseInt(num.trim());
+                    if (!validarEntrada(dia, 1, 7)) {
+                        alert('Ingreso invalido');
+                        return null;
+                    }
+                    return diasSemana[dia];
+                }).filter(dia => dia !== null);
+                if (diasNombres.length === 0) {
+                    alert('Ingreso invalido');
+                    return;
+                }
+                tarea.dia = diasNombres.join(', ');
+            } else {
+                const diaMes = prompt('Ingrese el nuevo número de día del mes');
+                if (!validarEntrada(diaMes, 1, 31)) {
+                    alert('Día del mes no válido');
+                    return;
+                }
+                tarea.dia = diaMes;
+            }
+            alert('Los dias fueron modificados');
+            break;
+        case '3':
+            alert('Para cumplir la tarea marque la opcion 4 del menu principal');
+            break;
+        default:
+            alert('Opcion no valida');
+            break;
+    }
+}
+
+function eliminarTarea() {
+    let tipo = prompt(`Agenda de ${usuarioActual}\n\nEliminar tarea\n\n1 - Del día\n2 - De la semana\n3 - Del mes`);
+
+    if (!validarEntrada(tipo, 1, 3)) {
+        alert('Opción no válida');
+        return;
+    }
+
+    tipo = tipo === '1' ? 'hoy' : tipo === '2' ? 'Semanal' : 'Mensual';
+    let tareasFiltradas = agenda[usuarioActual].filter(t => t.tipo === tipo);
+
+    if (tareasFiltradas.length === 0) {
+        alert('No hay tareas de este tipo');
+        return;
+    }
+
+    console.table(tareasFiltradas);
+    let id = prompt('ELIMINAR\nIngrese el ID');
+    let index = agenda[usuarioActual].findIndex(t => t.id === id);
+
+    if (index !== -1) {
+        let confirmacion = prompt('Escriba "eliminar" para confirmar');
+        if (confirmacion === 'eliminar') {
+            agenda[usuarioActual].splice(index, 1);
+            alert('Se borro la tarea');
+        } else {
+            alert('NO se borro la tarea');
+        }
+    } else {
+        alert('ID no encontrado');
+    }
+}
+
+function cumplirTarea() {
+    const tipoTareaNum = prompt(`Agenda de ${usuarioActual}\n\nCumplir tarea\n\n1 - Semanal\n2 - Mensual\n3 - Hoy`);
+    if (!validarEntrada(tipoTareaNum, 1, 3)) {
+        alert('Opción no válida');
+        return;
+    }
+
+    const tipo = tipoTareaNum === '1' ? 'Semanal' : tipoTareaNum === '2' ? 'Mensual' : 'hoy';
+    const tareasFiltradas = agenda[usuarioActual].filter(tarea => tarea.tipo === tipo);
+    if (tareasFiltradas.length === 0) {
+        alert(`No hay tareas de tipo ${tipo}`);
+        return;
+    }
+
+    console.table(tareasFiltradas);
+    const id = prompt(`CUMPLIR\n\nIngrese el ID`);
+    const tarea = agenda[usuarioActual].find(t => t.id === id);
+
+    if (tarea) {
+        tarea.estado = 'Cumplida';
+        alert('Tarea cumplida', tarea);
+    } else {
+        alert('No se encontro su ID');
+    }
+}
+
+function cerrarSesion() {
+    alert(`Sesión cerrada para el usuario: ${usuarioActual}`);
+    console.log(`Sesión cerrada para el usuario: ${usuarioActual}`);
+    usuarioActual = '';
+}
+
+
+
+alert('BIENVENIDO A SU AGENDA ONLINE');
+iniciarSesion();
 let continuar;
 
 do {
-    let altura = prompt('Ingrese su altura en metros:');
-    let peso = prompt('Ingrese su peso en kilogramos:');
-    let edad = prompt('Ingrese su edad:');
-
-    altura = parseFloat(altura);
-    peso = parseFloat(peso);
-    edad = parseInt(edad);
-
-    let calcularIMC = (peso, altura) => {
-        let imc = peso / (altura * altura);
-        let clasificacionImc;
-
-        if (imc < 18.5) {
-            clasificacionImc = 'bajo';
-        } else if (imc >= 18.5 && imc < 25) {
-            clasificacionImc = 'normal';
-        } else if (imc >= 25 && imc < 30) {
-            clasificacionImc = 'regular';
-        } else {
-            clasificacionImc = 'alto';
-        }
-        imc = imc.toFixed(2);
-        return { imc, clasificacionImc };
-    };
-
-    let clasificacionEtaria = (edad) => {
-        let numeroBanda;
-        if (edad >= 15 && edad < 25) {
-            bandaEtaria = 'adolecente (entre 15 y 24 años.)';
-            numeroBanda = 1;
-        } else if (edad >= 25 && edad < 50) {
-            bandaEtaria = 'adulto joven (entre 25 y 49 años)';
-            numeroBanda = 2;
-        } else if (edad >= 50 && edad < 70) {
-            bandaEtaria = 'adulto mayor (entre 50 y 70 años';
-            numeroBanda = 3;
-        } else if (edad >= 70) {
-            bandaEtaria = 'tercera edad (mayor de 70 años)';
-        } else {
-            bandaEtaria = 'es menor de 15 años';
-        }
-        return { numeroBanda, bandaEtaria };
-    };
-
-    if (isNaN(altura) || isNaN(peso) || isNaN(edad)) {
-        alert('No ingresó valores válidos para altura, peso o edad');
-    } else {
-        let { imc, clasificacionImc } = calcularIMC(peso, altura);
-        let { numeroBanda, bandaEtaria } = clasificacionEtaria(edad);
-
-        if (numeroBanda === 0) {
-            alert('Usted tiene menos de 15 años, consulte un profesional');
-        } else {
-            alert('Si IMC es de ' + imc + '\nSu clasificacion de IMC es ' + clasificacionImc + '\nPertenece a la franja etaria ' + bandaEtaria);
-
-            if (numeroBanda === 1) {
-                if (clasificacionImc === 'normal') {
-                    let opc = prompt('Está apto para realizar cualquier tipo de actividad física\nPresione 1 para ver algunas sugerencias o cualquier tecla para salir');
-                    if (opc === '1') {
-                        alert('Rugby\nFutbol\nGimnasio\nCiclismo\nNatacion');
-                    }
-                } else if (clasificacionImc === 'regular') {
-                    let opc = promp('Le recomendamos hacer actividad física de baja intensidad\nPresione 1 para ver algunas sugerencias o cualquier tecla para salir');
-                    if (opc === '1') {
-                        alert('Caminata\nCiclismo\nAerobicos de bajo impacto\nYoga\nFuncional');
-                    }
-                } else if (clasificacionImc === 'bajo') {
-                    alert('Su peso es bajo, consulte un nutricionista');
-                } else {
-                    alert('Consulte un profesional\nCaminar nunca esta de más');
-                }
-            } else if (numeroBanda === 2) {
-                if (clasificacionImc === 'normal') {
-                    let opc = prompt('Está apto para realizar cualquier tipo de actividad física\nPresione 1 para ver algunas sugerencias o cualquier tecla para salir');
-                    if (opc === '1') {
-                        alert('Running\nEntrenamiento de Fuerza\nFutbol\nGimnasio\nCrossFit\nEscaladas');
-                    }
-                } else if (clasificacionImc === 'regular') {
-                    let opc = prompt('Le recomendamos hacer actividad física de baja intenidad\nPresione 1 para ver algunas sugerencias o cualquier tecla para salir');
-                    if (opc === '1') {
-                        alert('Caminar\nCiclismo\nYoga\nNatacion\nSenderismo');
-                    }
-                } else if (clasificacionImc === 'bajo') {
-                    alert(
-                        'Su peso es bajo, consulte un nutricionista.\nPara ganar masa muscular le rcomendamos hacer pesas, no sin antes consultar un profesional');
-                } else {
-                    alert('Consulte un profesional\nCaminar nunca esta de más');
-                }
-            } else if (numeroBanda === 3) {
-                if (clasificacionImc === 'normal' || clasificacionImc === 'regular') {
-                    let opc = prompt('Le recomendamos hacer actividad física de baja intenidad con el adecuado seguimiento de un profesional\nPresione 1 para ver algunas sugerencias o cualquier tecla para salir');
-                    if (opc === '1') {
-                        alert('Caminata suave\nNatacion\nEjercicios de estiramientos\nYoga\nTai Chi');
-                    }
-                } else {
-                    console.log('Consulte un nutricionista');
-                    alert('Su peso es bajo, consulte un nutricionista');
-                }
-            } else if (numeroBanda === 4) {
-                if (clasificacionImc === 'normal') {
-                    console.log('Le recomendamos realizar actividades adecuadas a su edad con seguimiento de un profesional');
-                } else {
-                    console.log('Consulte a un profesional para una evaluación más detallada');
-                }
-            }
-        }
+    let accion = prompt(`Esta en la agenda de ${usuarioActual}\n\nIngrese la opción deseada\n1 - Agregar una tarea\n2 - Revisar la agenda\n3 - Modificar una tarea\n4 - Cumplir una tarea\n5 - Eliminar\n6 - Cambiar de Usuario\n7 - Salir`);
+    if (!validarEntrada(accion, 1, 7)) {
+        alert('Opción no válida');
+        continuar = prompt("Mantener la agenda abierta... 'si' o 'no'").toLowerCase();
+        continue;
     }
-    continuar = prompt('¿Quiere realizar otra consulta? escriba si o no').toLowerCase();
-} while (continuar === 'si');
+    accion = parseInt(accion);
 
-alert('Gracias por su consulta');
+    switch (accion) {
+        case 1:
+            agregarTarea();
+            break;
+        case 2:
+            verAgenda();
+            break;
+        case 3:
+            modificarTarea();
+            break;
+        case 4:
+            cumplirTarea();
+            break;
+        case 5:
+            eliminarTarea();
+            break;
+        case 6:
+            cerrarSesion();
+            iniciarSesion();
+            break;
+        case 7:
+            continuar = 'no';
+            break;
+        default:
+            console.log('Opción no válida.');
+            break;
+    }
+
+    if (accion !== 7) {
+        do {
+            continuar = prompt("Mantener agenda abierta... 'si' o 'no'").toLowerCase();
+        } while (continuar !== 'si' && continuar !== 'no');
+    }
+} while (continuar === "si");
+
+alert(`No olvides tus notas ${usuarioActual}!\nNos vemos pronto!`);
