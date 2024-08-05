@@ -1,0 +1,61 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #8dbfd2;
+    height: 100vh;
+}
+
+#registro, .agenda {
+    background-color: #4a3ac5;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+#registro h2, .agenda h2 {
+    color: #630f0f;
+    margin-bottom: 20px;
+}
+
+label {
+    color: #321515;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #aec5de;
+    color: #071d35;
+}
+
+#buscarTarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+
+
+
+#escribirAgenda, #verAgenda {
+    padding: 20px;
+}
+
+#verAgenda .tarea {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#verAgenda .tarea button {
+    margin-right: 10px;
+}
