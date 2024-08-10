@@ -15,7 +15,6 @@
         <h1>BIENVENIDO A TU ORGANIZADOR DE TAREAS</h1>
     </header>
     <main class="container mt-4">
-
         <div id="agenda" class="agenda">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 id="bienvenidaUsuario">Esta es la agenda de </h2>
@@ -26,26 +25,17 @@
             <div class="row">
                 <!-- Columna izquierda: Escribir Agenda -->
                 <div id="escribirAgenda" class="col-md-4">
-
-
-                    <div class="mb-4">
-
-                    </div>
+                    <div class="mb-4"></div>
                     <div class="row">
-
                         <h3>Agregar Tarea</h3>
-
-
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                             <button type="button" id="btnDia" class="btn btn-outline-primary">DIA</button>
                             <button type="button" id="btnSemana" class="btn btn-outline-primary">SEMANA</button>
                             <button type="button" id="btnMes" class="btn btn-outline-primary">MES</button>
                         </div>
                         <div class="row">
-                            <!--  <template class="formularioTareas">-->
                             <div class="row">
                                 <template id="formularioGeneralTemplate">
-
                                     <div class="col-md">
                                         <form>
                                             <div class="form-group">
@@ -62,12 +52,10 @@
                                             </div>
                                         </form>
                                     </div>
-
                                 </template>
 
                                 <template id="formularioSemanaTemplate">
                                     <div class="col-md-3">
-
                                         <div id="diasSemana" class="form-group">
                                             <label>Días de la semana</label><br>
                                             <div class="form-check form-check-inline">
@@ -77,7 +65,7 @@
                                                 <input type="checkbox" value="Martes" class="form-check-input">Martes
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input type="checkbox" value="Miércoles"
+                                                <input type="checkbox" value="Miercoles"
                                                     class="form-check-input">Miércoles
                                             </div>
                                             <div class="form-check form-check-inline">
@@ -87,24 +75,21 @@
                                                 <input type="checkbox" value="Viernes" class="form-check-input">Viernes
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input type="checkbox" value="Sábado" class="form-check-input">Sábado
+                                                <input type="checkbox" value="Sabado" class="form-check-input">Sábado
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input type="checkbox" value="Domingo" class="form-check-input">Domingo
                                             </div>
                                         </div>
                                     </div>
-
                                 </template>
 
                                 <template id="formularioMesTemplate">
                                     <div class="col-md-2">
-
                                         <div id="diasRepeticionMes" class="form-group">
                                             <label>Día del mes:</label>
                                             <input type="number" id="diaMes" min="1" max="31" class="form-control">
                                         </div>
-
                                     </div>
                                 </template>
 
@@ -112,7 +97,6 @@
 
                                 <div id="ConfirmarTarea" class="btn-group" role="group"
                                     aria-label="Basic mixed styles example">
-
                                     <button id="btnDesecharTarea" type="button" class="btn btn-danger">CANCELAR</button>
                                     <button id="btnAgregarTarea" type="GuardarTarea"
                                         class="btn btn-success">ENVIAR</button>
@@ -120,54 +104,35 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Columna derecha: Ver Agenda -->
-
-                <div id="verAgenda" class="col-md-8">
-
-                    <!--PARA VER POD Y Y SEMANA ES EL MISMO HTML POR DIA ORDENA POR HORA DE LA TAREA Y POR MES POR DIA Y HORA SI ES NECESARIO-->
-
-                    <div id="verAgendaDia" class="mb-4">
-
-                        <h3>Ver Agenda</h3>
-
-                        <button type="button" class="btn btn-primary" id="filtroTareasDia">
-                            Hoy <span class="badge text-bg-secondary">4</span>
-                        </button>
-                        <button type="button" class="btn btn-primary" id="filtroTareasSemana">
-                            Semana <span class="badge text-bg-secondary">4</span>
-                        </button>
-                        <button type="button" class="btn btn-primary" id="filtroTareasMes">
-                            Mes <span class="badge text-bg-secondary">4</span>
-                        </button>
-                        <button type="button" class="btn btn-primary" id="filtroTareas">
-                            Todo <span class="badge text-bg-secondary">4</span>
-                        </button>
-
-                        <input type="text" id="buscarTarea" class="form-control" placeholder="Buscar tarea...">
-
-                        <!--TEMPLATE VER TAREA-->
-
-                        <div id="tareas"></div>
-
-                    </div>
-                    <!--COLUMNAS PARA MOSTRAR LAS TAREAS POR SEMANA-->
-
-                    <div id="verAgendaSemana" class="container text-center">
-                        <div class="row align-items-start">
-
-                            <div id="verLunes" class="col">LUNES</div>
-                            <div id="verMartes" class="col">MARTES</div>
-                            <div id="verMiercoles" class="col">MIERCOLES</div>
-                            <div id="verJueves" class="col">JUEVES</div>
-                            <div id="verViernes" class="col">VIERNES</div>
-                            <div id="verSabado" class="col">SABADO</div>
-                            <div id="verDomingo" class="col">DOMINGO</div>
-
+                <template id="tareaTemplate">
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <h5 class="card-title"></h5>
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p class="card-text"></p>
+                                    <p>Tipo: </p>
+                                    <p>Hora: </p>
+                                    <p>Días de repetición: </p>
+                                    <p>Estado: </p>
+                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                        <button type="button" class="btn btn-danger">ELIMINAR</button>
+                                        <button type="button" class="btn btn-success">MODIFICAR</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </template>
 
 
 
@@ -175,9 +140,98 @@
 
 
 
+                <div id="verAgenda" class="col-md-8">
+                    <h3>Ver Agenda</h3>
+                    <button type="button" class="btn btn-primary" id="filtroTareasDia">
+                        Hoy <span class="badge text-bg-secondary">4</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="filtroTareasSemana">
+                        Semana <span class="badge text-bg-secondary">4</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="filtroTareasMes">
+                        Mes <span class="badge text-bg-secondary">4</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="filtroTareas">
+                        Todo <span class="badge text-bg-secondary">4</span>
+                    </button>
+                    <input type="text" id="buscarTarea" class="form-control" placeholder="Buscar tarea...">
+
+                    <div id="tareas"></div>
+
+
+                    <template id="diaTemplate">
+                        <div class="tarea-dia">
+                            <h4>Día</h4>
+                            <div class="tareas-dia"></div>
+                        </div>
+                    </template>
+
+                    <template id="semanaTemplate">
+                        <div class="tarea-semana row">
+                            <h4>Semana</h4>
+                            <div class="tareas-semana col">
+                                <div class="row">
+                                    <div class="col" id="lunes">Lunes</div>
+                                    <div class="col" id="martes">Martes</div>
+                                    <div class="col" id="miercoles">Miércoles</div>
+                                    <div class="col" id="jueves">Jueves</div>
+                                    <div class="col" id="viernes">Viernes</div>
+                                    <div class="col" id="sabado">Sábado</div>
+                                    <div class="col" id="domingo">Domingo</div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template id="mesTemplate">
+                        <div class="tarea-mes">
+                            <h4>Mes</h4>
+                            <div class="tareas-mes"></div>
+                        </div>
+                    </template>
 
                 </div>
+                <!--
 
+                <div id="contenedorTareas">
+
+                    <div id="tareasDia" class="tareas-dia">
+                        <div id="tareas"></div>
+                    </div>
+                    <div id="tareasSemana" class="tareas-semana">
+                        <div class="row align-items-start">
+                            <div id="verLunes" class="col">
+                                <div id="tareas"></div>
+                            </div>
+                            <div id="verMartes" class="col">
+                                <div id="tareas"></div>
+                            </div>
+                            <div id="verMiercoles" class="col">
+                                <div id="tareas"></div>
+                            </div>
+                            <div id="verJueves" class="col">
+                                <div id="tareas"></div>
+                            </div>
+                            <div id="verViernes" class="col">
+                                <div id="tareas"></div>
+                            </div>
+                            <div id="verSabado" class="col">
+                                <div id="tareas"></div>
+                            </div>
+                            <div id="verDomingo" class="col">
+                                <div id="tareas"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tareasMes" class="tareas-mes">
+
+                        <div id="tareas"></div>
+                    </div>
+                </div>
+                <div id="tareas"></div>
+
+                </template>
+-->
             </div>
         </div>
     </main>
@@ -187,16 +241,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-
     <script src="../js/cerrarSesion.js"></script>
-
-    <script src="../js/contadorDeTareas.js"></script>
-    <script src="../js/formularioDeTareas.js"></script>
-    <script src="../js/listadoDeTareas.js"></script>
-    <script src="../js/vistaDeTareas.js"></script>
-
-
+    <script src="../js/tareas.js"></script>
 </body>
 
 </html>
